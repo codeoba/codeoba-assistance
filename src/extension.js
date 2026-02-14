@@ -62,6 +62,12 @@ const CodeDNA_1 = require("./managers/CodeDNA");
 const ChronosDebugger_1 = require("./managers/ChronosDebugger");
 const Oracle_1 = require("./managers/Oracle");
 
+// New V5 "The Big Bang" Managers
+const ManhattanProject_1 = require("./managers/ManhattanProject");
+const QuantumEntanglement_1 = require("./managers/QuantumEntanglement");
+const DarkMatter_1 = require("./managers/DarkMatter");
+const GalacticFederation_1 = require("./managers/GalacticFederation");
+
 const StatusBar_1 = require("./ui/StatusBar");
 const Logger_1 = require("./utils/Logger");
 // Mock Database for quick setup
@@ -93,12 +99,16 @@ let swarmOrchestrator;
 let codeDNA;
 let chronosDebugger;
 let oracle;
+let manhattanProject;
+let quantumEntanglement;
+let darkMatter;
+let galacticFederation;
 let statusBarManager;
 let logger;
 
 async function activate(context) {
     logger = new Logger_1.Logger(context);
-    logger.info('Codeoba Assistance: TRANSCENDENCE ACHIEVED (v4.0)');
+    logger.info('Codeoba Assistance: BIG BANG DETONATED (v5.0)');
 
     // Initialize managers
     accountManager = new AccountManager_1.AccountManager(context, database);
@@ -128,6 +138,12 @@ async function activate(context) {
     chronosDebugger = new ChronosDebugger_1.ChronosDebugger(context);
     oracle = new Oracle_1.Oracle(context);
 
+    // V5 Initialization
+    manhattanProject = new ManhattanProject_1.ManhattanProject(context);
+    quantumEntanglement = new QuantumEntanglement_1.QuantumEntanglement(context);
+    darkMatter = new DarkMatter_1.DarkMatter(context);
+    galacticFederation = new GalacticFederation_1.GalacticFederation(context);
+
     statusBarManager = new StatusBar_1.StatusBarManager(context);
 
     // Start background services
@@ -151,6 +167,7 @@ function deactivate() {
     if (autoRefresh) autoRefresh.stop();
     if (shadowMode) shadowMode.dispose();
     if (intentPredictor) intentPredictor.dispose();
+    if (quantumEntanglement) quantumEntanglement.dispose();
 }
 
 async function startBackgroundServices() {
@@ -186,4 +203,10 @@ function registerCommands(context) {
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.hiveMind', () => swarmOrchestrator.initiateHiveMind()));
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.extractDNA', () => codeDNA.extractDNA()));
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.consultOracle', () => oracle.consultTheOracle()));
+
+    // V5 Commands
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.launchNuke', () => manhattanProject.launchNuke()));
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.connectQuantum', () => quantumEntanglement.connectToHive()));
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.summonDarkMatter', () => darkMatter.summonDarkMatter()));
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.colonizeUniverse', () => galacticFederation.colonizeUniverse()));
 }

@@ -2,7 +2,7 @@
 	"name": "codeoba-assistance",
 	"displayName": "Codeoba Assistance",
 	"description": "AI Coding Productivity Extension for Google Antigravity - Multi-account management, auto-click, quota monitoring, and advanced workflows",
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"publisher": "MohamedMgaza",
 	"author": {
 		"name": "Mohamed Mgaza",
@@ -180,6 +180,30 @@
 				"title": "Consult The Oracle",
 				"category": "Codeoba",
 				"icon": "$(telescope)"
+			},
+			{
+				"command": "codeoba.launchNuke",
+				"title": "The Manhattan Project (Nuke Legacy)",
+				"category": "Codeoba",
+				"icon": "$(flame)"
+			},
+			{
+				"command": "codeoba.connectQuantum",
+				"title": "Connect Quantum Entanglement",
+				"category": "Codeoba",
+				"icon": "$(radio-tower)"
+			},
+			{
+				"command": "codeoba.summonDarkMatter",
+				"title": "Summon Dark Matter (Invisible Code)",
+				"category": "Codeoba",
+				"icon": "$(magnet)"
+			},
+			{
+				"command": "codeoba.colonizeUniverse",
+				"title": "Colonize Universe (Galactic Federation)",
+				"category": "Codeoba",
+				"icon": "$(globe)"
 			}
 		],
 		"keybindings": [
