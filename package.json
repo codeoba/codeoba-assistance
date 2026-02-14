@@ -1,0 +1,374 @@
+{
+	"name": "codeoba-assistance",
+	"displayName": "Codeoba Assistance",
+	"description": "AI Coding Productivity Extension for Google Antigravity - Multi-account management, auto-click, quota monitoring, and advanced workflows",
+	"version": "1.0.1",
+	"publisher": "MohamedMgaza",
+	"author": {
+		"name": "Mohamed Mgaza",
+		"email": "contact@mdandu.com",
+		"url": "https://mdandu.com"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mohamedmgaza/codeoba-assistance"
+	},
+	"bugs": {
+		"url": "https://github.com/mohamedmgaza/codeoba-assistance/issues",
+		"email": "contact@mdandu.com"
+	},
+	"homepage": "https://mdandu.com/codeoba-assistance",
+	"icon": "media/icons/icon.png",
+	"galleryBanner": {
+		"color": "#1E1E1E",
+		"theme": "dark"
+	},
+	"engines": {
+		"vscode": "^1.96.0"
+	},
+	"categories": [
+		"Other",
+		"Machine Learning"
+	],
+	"keywords": [
+		"antigravity",
+		"gemini",
+		"ai",
+		"assistant",
+		"productivity",
+		"automation",
+		"multi-account",
+		"quota",
+		"workflow",
+		"tanzania"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "codeoba.switchAccount",
+				"title": "Switch Account",
+				"category": "Codeoba",
+				"icon": "$(account)"
+			},
+			{
+				"command": "codeoba.showQuota",
+				"title": "Show Quota Dashboard",
+				"category": "Codeoba",
+				"icon": "$(dashboard)"
+			},
+			{
+				"command": "codeoba.switchProfile",
+				"title": "Switch Profile",
+				"category": "Codeoba",
+				"icon": "$(symbol-namespace)"
+			},
+			{
+				"command": "codeoba.configureAutoClick",
+				"title": "Configure Auto-Click Rules",
+				"category": "Codeoba",
+				"icon": "$(settings-gear)"
+			},
+			{
+				"command": "codeoba.manageTemplates",
+				"title": "Manage Templates",
+				"category": "Codeoba",
+				"icon": "$(file-code)"
+			},
+			{
+				"command": "codeoba.createWorkflow",
+				"title": "Create Agent Workflow",
+				"category": "Codeoba",
+				"icon": "$(organization)"
+			},
+			{
+				"command": "codeoba.showSettings",
+				"title": "Open Settings",
+				"category": "Codeoba",
+				"icon": "$(settings)"
+			},
+			{
+				"command": "codeoba.addAccount",
+				"title": "Add New Account",
+				"category": "Codeoba"
+			},
+			{
+				"command": "codeoba.removeAccount",
+				"title": "Remove Account",
+				"category": "Codeoba"
+			},
+			{
+				"command": "codeoba.refreshQuota",
+				"title": "Refresh Quota Data",
+				"category": "Codeoba"
+			},
+			{
+				"command": "codeoba.viewAutoClickHistory",
+				"title": "View Auto-Click History",
+				"category": "Codeoba"
+			},
+			{
+				"command": "codeoba.exportProfile",
+				"title": "Export Current Profile",
+				"category": "Codeoba"
+			},
+			{
+				"command": "codeoba.importProfile",
+				"title": "Import Profile",
+				"category": "Codeoba"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "codeoba.switchAccount",
+				"key": "ctrl+alt+a",
+				"mac": "cmd+alt+a",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "codeoba.showQuota",
+				"key": "ctrl+alt+q",
+				"mac": "cmd+alt+q"
+			},
+			{
+				"command": "codeoba.switchProfile",
+				"key": "ctrl+shift+p",
+				"mac": "cmd+shift+p",
+				"when": "editorTextFocus"
+			}
+		],
+		"configuration": {
+			"title": "Codeoba Assistance",
+			"properties": {
+				"codeoba.accounts": {
+					"type": "array",
+					"default": [],
+					"description": "List of configured Google accounts",
+					"scope": "application"
+				},
+				"codeoba.activeAccount": {
+					"type": "string",
+					"default": "",
+					"description": "Currently active account ID",
+					"scope": "application"
+				},
+				"codeoba.autoClick.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable auto-click for common prompts"
+				},
+				"codeoba.autoClick.rules": {
+					"type": "object",
+					"default": {
+						"applyChanges": true,
+						"runCommand": true,
+						"retryFailed": true,
+						"installDependency": true,
+						"createFile": true,
+						"saveArtifact": true,
+						"deleteFile": false,
+						"overwriteFile": false
+					},
+					"description": "Auto-click rules for different prompt types"
+				},
+				"codeoba.autoClick.delayMs": {
+					"type": "number",
+					"default": 500,
+					"minimum": 0,
+					"maximum": 5000,
+					"description": "Delay in milliseconds before auto-clicking (safety feature)"
+				},
+				"codeoba.quota.alertThreshold": {
+					"type": "number",
+					"default": 80,
+					"minimum": 50,
+					"maximum": 100,
+					"description": "Show alert when quota usage exceeds this percentage"
+				},
+				"codeoba.quota.refreshInterval": {
+					"type": "number",
+					"default": 300000,
+					"minimum": 60000,
+					"maximum": 3600000,
+					"description": "Quota refresh interval in milliseconds (default: 5 minutes)"
+				},
+				"codeoba.quota.currency": {
+					"type": "string",
+					"default": "USD",
+					"enum": [
+						"USD",
+						"EUR",
+						"GBP",
+						"TZS",
+						"KES"
+					],
+					"description": "Currency for cost display"
+				},
+				"codeoba.statusBar.showAccount": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show active account in status bar"
+				},
+				"codeoba.statusBar.showQuota": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show quota usage in status bar"
+				},
+				"codeoba.statusBar.showCost": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show estimated cost in status bar"
+				},
+				"codeoba.statusBar.showAgents": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show active agents count in status bar"
+				},
+				"codeoba.statusBar.showModel": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show current model in status bar"
+				},
+				"codeoba.statusBar.showPerformance": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show performance metrics in status bar"
+				},
+				"codeoba.statusBar.compactMode": {
+					"type": "boolean",
+					"default": false,
+					"description": "Use compact mode for status bar (icons only)"
+				},
+				"codeoba.autoRefresh.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable auto-refresh system"
+				},
+				"codeoba.autoRefresh.intervalMs": {
+					"type": "number",
+					"default": 10000,
+					"minimum": 5000,
+					"maximum": 60000,
+					"description": "Auto-refresh interval in milliseconds"
+				},
+				"codeoba.autoRefresh.pauseOnBattery": {
+					"type": "boolean",
+					"default": true,
+					"description": "Reduce refresh rate when on battery power"
+				},
+				"codeoba.autoImport.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable auto-import for missing dependencies"
+				},
+				"codeoba.autoImport.autoInstall": {
+					"type": "boolean",
+					"default": false,
+					"description": "Automatically install missing packages without confirmation"
+				},
+				"codeoba.autoImport.packageManagers": {
+					"type": "array",
+					"default": [
+						"npm",
+						"pip",
+						"gem"
+					],
+					"description": "Enabled package managers for auto-import"
+				},
+				"codeoba.profiles.activeProfile": {
+					"type": "string",
+					"default": "",
+					"description": "Currently active profile ID"
+				},
+				"codeoba.profiles.autoSwitch": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically switch profiles based on context"
+				},
+				"codeoba.templates.showOnStartup": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show template picker on new file creation"
+				},
+				"codeoba.analytics.enabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable anonymous usage analytics"
+				},
+				"codeoba.notifications.showQuotaAlerts": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show notifications for quota alerts"
+				},
+				"codeoba.notifications.showAutoClickActions": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show notifications for auto-click actions"
+				}
+			}
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "codeoba",
+					"title": "Codeoba Assistance",
+					"icon": "media/icons/icon.png"
+				}
+			]
+		},
+		"views": {
+			"codeoba": [
+				{
+					"id": "codeoba.accounts",
+					"name": "Accounts",
+					"icon": "media/icons/icon.png"
+				},
+				{
+					"id": "codeoba.templates",
+					"name": "Templates",
+					"icon": "media/icons/icon.png"
+				},
+				{
+					"id": "codeoba.workflows",
+					"name": "Workflows",
+					"icon": "media/icons/icon.png"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js",
+		"package": "vsce package",
+		"publish": "vsce publish"
+	},
+	"devDependencies": {
+		"@types/better-sqlite3": "^7.6.8",
+		"@types/node": "^20.x",
+		"@types/vscode": "^1.96.0",
+		"@typescript-eslint/eslint-plugin": "^6.x",
+		"@typescript-eslint/parser": "^6.x",
+		"@vscode/test-electron": "^2.3.x",
+		"@vscode/vsce": "^2.22.0",
+		"eslint": "^8.x",
+		"typescript": "^5.3.x"
+	},
+	"dependencies": {
+		"@types/uuid": "^10.0.0",
+		"axios": "^1.6.5",
+		"uuid": "^13.0.0"
+	},
+	"__metadata": {
+		"installedTimestamp": 1771081579381,
+		"targetPlatform": "undefined",
+		"size": 1745984
+	}
+}
