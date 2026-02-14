@@ -2,7 +2,7 @@
 	"name": "codeoba-assistance",
 	"displayName": "Codeoba Assistance",
 	"description": "AI Coding Productivity Extension for Google Antigravity - Multi-account management, auto-click, quota monitoring, and advanced workflows",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"publisher": "MohamedMgaza",
 	"author": {
 		"name": "Mohamed Mgaza",
@@ -150,6 +150,18 @@
 				"title": "Create Project from Blueprint",
 				"category": "Codeoba",
 				"icon": "$(file-submodule)"
+			},
+			{
+				"command": "codeoba.replicateRepo",
+				"title": "Autonomous Git Cloner (God Mode)",
+				"category": "Codeoba",
+				"icon": "$(repo-clone)"
+			},
+			{
+				"command": "codeoba.selfHeal",
+				"title": "Self-Heal Infrastructure",
+				"category": "Codeoba",
+				"icon": "$(heart)"
 			}
 		],
 		"keybindings": [

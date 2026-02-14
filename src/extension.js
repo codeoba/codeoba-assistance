@@ -51,6 +51,11 @@ const WorkflowMarketplace_1 = require("./managers/WorkflowMarketplace");
 const TerminalManager_1 = require("./managers/TerminalManager");
 const VoiceCommander_1 = require("./managers/VoiceCommander");
 
+// New V3 "God Mode" Managers
+const RepoReplicator_1 = require("./managers/RepoReplicator");
+const IntentPredictor_1 = require("./managers/IntentPredictor");
+const SelfHealer_1 = require("./managers/SelfHealer");
+
 const StatusBar_1 = require("./ui/StatusBar");
 const Logger_1 = require("./utils/Logger");
 // Mock Database for quick setup
@@ -75,12 +80,15 @@ let shadowMode;
 let workflowMarketplace;
 let terminalManager;
 let voiceCommander;
+let repoReplicator;
+let intentPredictor;
+let selfHealer;
 let statusBarManager;
 let logger;
 
 async function activate(context) {
     logger = new Logger_1.Logger(context);
-    logger.info('Codeoba Assistance Super Tool is now active!');
+    logger.info('Codeoba Assistance God Mode is active!');
 
     // Initialize managers
     accountManager = new AccountManager_1.AccountManager(context, database);
@@ -98,6 +106,11 @@ async function activate(context) {
     workflowMarketplace = new WorkflowMarketplace_1.WorkflowMarketplace(context);
     terminalManager = new TerminalManager_1.TerminalManager(context);
     voiceCommander = new VoiceCommander_1.VoiceCommander(context);
+
+    // V3 Initialization
+    repoReplicator = new RepoReplicator_1.RepoReplicator(context);
+    intentPredictor = new IntentPredictor_1.IntentPredictor(context);
+    selfHealer = new SelfHealer_1.SelfHealer(context);
 
     statusBarManager = new StatusBar_1.StatusBarManager(context);
 
@@ -121,6 +134,7 @@ function deactivate() {
     // Clean up resources
     if (autoRefresh) autoRefresh.stop();
     if (shadowMode) shadowMode.dispose();
+    if (intentPredictor) intentPredictor.dispose();
 }
 
 async function startBackgroundServices() {
@@ -147,4 +161,8 @@ function registerCommands(context) {
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.fixLastError', () => terminalManager.fixLastError()));
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.voiceCommand', () => voiceCommander.listen()));
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.createBlueprint', () => agentOrchestrator.createWorkflowWizard())); // Reuse for now
+
+    // V3 Commands
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.replicateRepo', () => repoReplicator.startReplication()));
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.selfHeal', () => selfHealer.healProject()));
 }
