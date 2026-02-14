@@ -2,7 +2,7 @@
 	"name": "codeoba-assistance",
 	"displayName": "Codeoba Assistance",
 	"description": "AI Coding Productivity Extension for Google Antigravity - Multi-account management, auto-click, quota monitoring, and advanced workflows",
-	"version": "1.0.1",
+	"version": "2.0.0",
 	"publisher": "MohamedMgaza",
 	"author": {
 		"name": "Mohamed Mgaza",
@@ -120,6 +120,36 @@
 				"command": "codeoba.importProfile",
 				"title": "Import Profile",
 				"category": "Codeoba"
+			},
+			{
+				"command": "codeoba.openContextDoctor",
+				"title": "Open Context Doctor (Brain Surgery)",
+				"category": "Codeoba",
+				"icon": "$(pulse)"
+			},
+			{
+				"command": "codeoba.installWorkflow",
+				"title": "Open Workflow Marketplace",
+				"category": "Codeoba",
+				"icon": "$(cloud-download)"
+			},
+			{
+				"command": "codeoba.fixLastError",
+				"title": "Fix Last Terminal Error",
+				"category": "Codeoba",
+				"icon": "$(debug-restart)"
+			},
+			{
+				"command": "codeoba.voiceCommand",
+				"title": "Voice Command (Simulated)",
+				"category": "Codeoba",
+				"icon": "$(mic)"
+			},
+			{
+				"command": "codeoba.createBlueprint",
+				"title": "Create Project from Blueprint",
+				"category": "Codeoba",
+				"icon": "$(file-submodule)"
 			}
 		],
 		"keybindings": [

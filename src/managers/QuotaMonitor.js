@@ -1,156 +1,163 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = { enumerable: true, get: function () { return m[k]; } };
+  }
+  Object.defineProperty(o, k2, desc);
+}) : (function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+  Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function (o, v) {
+  o["default"] = v;
 });
 var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
+  var ownKeys = function (o) {
+    ownKeys = Object.getOwnPropertyNames || function (o) {
+      var ar = [];
+      for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+      return ar;
     };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
+    return ownKeys(o);
+  };
+  return function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+    __setModuleDefault(result, mod);
+    return result;
+  };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuotaMonitor = void 0;
 const vscode = __importStar(require("vscode"));
 class QuotaMonitor {
-    constructor(context, database) {
-        this.monitoringInterval = null;
-        this.currentQuota = null;
-        this.context = context;
-        this.database = database;
+  constructor(context, database) {
+    this.monitoringInterval = null;
+    this.currentQuota = null;
+    this.context = context;
+    this.database = database;
+  }
+  startMonitoring() {
+    const config = vscode.workspace.getConfiguration('codeoba');
+    const intervalMs = config.get('quota.refreshInterval', 300000); // 5 minutes default
+    this.monitoringInterval = setInterval(async () => {
+      await this.refreshQuotaData();
+    }, intervalMs);
+    // Initial fetch
+    this.refreshQuotaData();
+  }
+  stopMonitoring() {
+    if (this.monitoringInterval) {
+      clearInterval(this.monitoringInterval);
+      this.monitoringInterval = null;
     }
-    startMonitoring() {
-        const config = vscode.workspace.getConfiguration('codeoba');
-        const intervalMs = config.get('quota.refreshInterval', 300000); // 5 minutes default
-        this.monitoringInterval = setInterval(async () => {
-            await this.refreshQuotaData();
-        }, intervalMs);
-        // Initial fetch
-        this.refreshQuotaData();
-    }
-    stopMonitoring() {
-        if (this.monitoringInterval) {
-            clearInterval(this.monitoringInterval);
-            this.monitoringInterval = null;
-        }
-    }
-    async refreshQuotaData() {
-        try {
-            // TODO: Implement actual API call to Google Antigravity
-            // For now, using mock data
-            const accountManager = this.context.workspaceState.get('accountManager');
-            const activeAccount = accountManager?.getActiveAccount();
-            // Mock quota data (replace with real API call)
-            const mockQuotaInfo = {
-                accountId: activeAccount?.id || 'mock-id',
-                dailyLimit: 2000,
-                dailyUsed: Math.floor(Math.random() * 1200),
-                hourlyLimit: 100,
-                hourlyUsed: Math.floor(Math.random() * 60),
-                tokenLimit: 1000000,
-                tokenUsed: Math.floor(Math.random() * 750000),
-                estimatedCost: Math.random() * 20,
-                resetTime: Date.now() + (24 * 60 * 60 * 1000),
-                modelQuotas: [
-                    {
-                        modelName: 'Gemini 3 Pro',
-                        requestsUsed: Math.floor(Math.random() * 50),
-                        requestsLimit: 100,
-                        cycleResetTime: Date.now() + (60 * 60 * 1000)
-                    }
-                ],
-                lastUpdated: Date.now()
-            };
-            this.currentQuota = mockQuotaInfo;
-            if (activeAccount) {
-                // Save to database only if we have a real account
-                this.database.saveQuotaHistory(mockQuotaInfo);
-                // Log event
-                this.database.logEvent('quota_refreshed', {
-                    accountId: activeAccount.id,
-                    dailyUsage: (mockQuotaInfo.dailyUsed / mockQuotaInfo.dailyLimit) * 100
-                });
-            }
-            // Check thresholds
-            await this.checkThresholds(mockQuotaInfo);
-        }
-        catch (error) {
-            console.error('Error refreshing quota data:', error);
-            // Don't show error message every interval if it fails
-        }
-    }
-    async checkThresholds(quotaInfo) {
-        const config = vscode.workspace.getConfiguration('codeoba');
-        const threshold = config.get('quota.alertThreshold', 80);
-        const showAlerts = config.get('notifications.showQuotaAlerts', true);
-        if (!showAlerts) {
-            return;
-        }
-        const dailyUsagePercent = (quotaInfo.dailyUsed / quotaInfo.dailyLimit) * 100;
-        if (dailyUsagePercent >= 95) {
-            vscode.window.showErrorMessage(`⚠️ Critical: Daily quota at ${dailyUsagePercent.toFixed(0)}%! You may be rate limited soon.`, 'View Details').then(selection => {
-                if (selection === 'View Details') {
-                    this.showQuotaDashboard();
-                }
-            });
-        }
-        else if (dailyUsagePercent >= threshold) {
-            vscode.window.showWarningMessage(`⚠️ Warning: Daily quota at ${dailyUsagePercent.toFixed(0)}%`, 'View Details').then(selection => {
-                if (selection === 'View Details') {
-                    this.showQuotaDashboard();
-                }
-            });
-        }
-    }
-    async showQuotaDashboard() {
-        const panel = vscode.window.createWebviewPanel('codeobaQuota', 'Quota Dashboard', vscode.ViewColumn.One, {
-            enableScripts: true
+  }
+  async refreshQuotaData() {
+    try {
+      // TODO: Implement actual API call to Google Antigravity
+      // For now, using mock data
+      const accountManager = this.context.workspaceState.get('accountManager');
+      const activeAccount = accountManager?.getActiveAccount();
+      // Mock quota data (replace with real API call)
+      const mockQuotaInfo = {
+        accountId: activeAccount?.id || 'mock-id',
+        dailyLimit: 2000,
+        dailyUsed: Math.floor(Math.random() * 1200),
+        hourlyLimit: 100,
+        hourlyUsed: Math.floor(Math.random() * 60),
+        tokenLimit: 1000000,
+        tokenUsed: Math.floor(Math.random() * 750000),
+        estimatedCost: Math.random() * 20,
+        resetTime: Date.now() + (24 * 60 * 60 * 1000),
+        modelQuotas: [
+          {
+            modelName: 'Gemini 3 Pro',
+            requestsUsed: Math.floor(Math.random() * 50),
+            requestsLimit: 100,
+            cycleResetTime: Date.now() + (60 * 60 * 1000)
+          }
+        ],
+        lastUpdated: Date.now()
+      };
+      this.currentQuota = mockQuotaInfo;
+      if (activeAccount) {
+        // Save to database only if we have a real account
+        this.database.saveQuotaHistory(mockQuotaInfo);
+        // Log event
+        this.database.logEvent('quota_refreshed', {
+          accountId: activeAccount.id,
+          dailyUsage: (mockQuotaInfo.dailyUsed / mockQuotaInfo.dailyLimit) * 100
         });
-        panel.webview.html = this.getQuotaDashboardHtml();
-        // Handle messages from the webview
-        panel.webview.onDidReceiveMessage(message => {
-            switch (message.command) {
-                case 'refreshQuota':
-                    this.refreshQuotaData();
-                    // In a real app we'd post a message back to update the UI
-                    // For now, reload the html
-                    panel.webview.html = this.getQuotaDashboardHtml();
-                    return;
-            }
-        }, undefined, this.context.subscriptions);
+      }
+      // Check thresholds
+      await this.checkThresholds(mockQuotaInfo);
     }
-    getQuotaDashboardHtml() {
-        const quota = this.currentQuota;
-        if (!quota) {
-            return '<html><body><h1>No quota data available. Please try refreshing.</h1></body></html>';
+    catch (error) {
+      console.error('Error refreshing quota data:', error);
+      // Don't show error message every interval if it fails
+    }
+  }
+  async checkThresholds(quotaInfo) {
+    const config = vscode.workspace.getConfiguration('codeoba');
+    const threshold = config.get('quota.alertThreshold', 80);
+    const showAlerts = config.get('notifications.showQuotaAlerts', true);
+    if (!showAlerts) {
+      return;
+    }
+    const dailyUsagePercent = (quotaInfo.dailyUsed / quotaInfo.dailyLimit) * 100;
+    if (dailyUsagePercent >= 95) {
+      vscode.window.showErrorMessage(`⚠️ Critical: Daily quota at ${dailyUsagePercent.toFixed(0)}%! You may be rate limited soon.`, 'View Details').then(selection => {
+        if (selection === 'View Details') {
+          this.showQuotaDashboard();
         }
-        const dailyPercent = ((quota.dailyUsed / quota.dailyLimit) * 100).toFixed(1);
-        const hourlyPercent = ((quota.hourlyUsed / quota.hourlyLimit) * 100).toFixed(1);
-        const tokenPercent = ((quota.tokenUsed / quota.tokenLimit) * 100).toFixed(1);
-        return `
+      });
+    }
+    else if (dailyUsagePercent >= threshold) {
+      vscode.window.showWarningMessage(`⚠️ Warning: Daily quota at ${dailyUsagePercent.toFixed(0)}%`, 'View Details').then(selection => {
+        if (selection === 'View Details') {
+          this.showQuotaDashboard();
+        }
+      });
+    }
+  }
+  async showQuotaDashboard() {
+    const panel = vscode.window.createWebviewPanel('codeobaQuota', 'Quota Dashboard', vscode.ViewColumn.One, {
+      enableScripts: true
+    });
+    panel.webview.html = this.getQuotaDashboardHtml();
+    // Handle messages from the webview
+    panel.webview.onDidReceiveMessage(message => {
+      switch (message.command) {
+        case 'refreshQuota':
+          this.refreshQuotaData();
+          // In a real app we'd post a message back to update the UI
+          // For now, reload the html
+          panel.webview.html = this.getQuotaDashboardHtml();
+          return;
+      }
+    }, undefined, this.context.subscriptions);
+  }
+  getQuotaDashboardHtml() {
+    const quota = this.currentQuota;
+    if (!quota) {
+      return '<html><body><h1>No quota data available. Please try refreshing.</h1></body></html>';
+    }
+    const dailyPercent = ((quota.dailyUsed / quota.dailyLimit) * 100).toFixed(1);
+    const hourlyPercent = ((quota.hourlyUsed / quota.hourlyLimit) * 100).toFixed(1);
+    const tokenPercent = ((quota.tokenUsed / quota.tokenLimit) * 100).toFixed(1);
+
+    // ROI Calculation
+    const developerHourlyRate = 50; // Mock rate $50/hr
+    const timeSavedHours = (quota.dailyUsed * 0.1); // Mock: 6 mins saved per AI request
+    const valueGenerated = timeSavedHours * developerHourlyRate;
+    const roi = ((valueGenerated - quota.estimatedCost) / (quota.estimatedCost || 1)) * 100;
+
+    return `
       <!DOCTYPE html>
       <html>
       <head>
@@ -206,13 +213,28 @@ class QuotaMonitor {
           }
           .refresh-btn:hover {
             background-color: var(--vscode-button-hoverBackground);
+            width: 100%;
           }
+          .roi-card {
+            background: linear-gradient(45deg, #2196F3, #4CAF50);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+          }
+          .roi-big { font-size: 2.5em; font-weight: bold; }
         </style>
       </head>
       <body>
-        <h1>📊 Quota Dashboard</h1>
+        <h1>📊 Quota & ROI Dashboard</h1>
         
-        <button class="refresh-btn" onclick="refreshQuota()">🔄 Refresh Data</button>
+        <div class="roi-card">
+            <h2>Investment Analytics</h2>
+            <div class="roi-big">${roi.toFixed(0)}% ROI</div>
+            <p>You spent <strong>$${quota.estimatedCost.toFixed(2)}</strong> but saved <strong>$${valueGenerated.toFixed(2)}</strong> of billable time.</p>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshQuota()" style="margin-top: 20px">🔄 Refresh Data</button>
 
         <div class="section">
           <h2>Daily Usage</h2>
@@ -257,14 +279,6 @@ class QuotaMonitor {
         </div>
 
         <div class="section">
-          <h2>💰 Estimated Cost</h2>
-          <div class="stat">
-            <span>Today:</span>
-            <strong>$${quota.estimatedCost.toFixed(2)} USD</strong>
-          </div>
-        </div>
-
-        <div class="section">
           <h2>Model-Specific Quotas</h2>
           ${quota.modelQuotas.map(model => `
             <div style="margin: 15px 0;">
@@ -292,22 +306,21 @@ class QuotaMonitor {
       </body>
       </html>
     `;
+  }
+  getMeterColor(percent) {
+    if (percent < 60) {
+      return 'meter-green';
     }
-    getMeterColor(percent) {
-        if (percent < 60) {
-            return 'meter-green';
-        }
-        if (percent < 80) {
-            return 'meter-yellow';
-        }
-        if (percent < 95) {
-            return 'meter-orange';
-        }
-        return 'meter-red';
+    if (percent < 80) {
+      return 'meter-yellow';
     }
-    getCurrentQuota() {
-        return this.currentQuota;
+    if (percent < 95) {
+      return 'meter-orange';
     }
+    return 'meter-red';
+  }
+  getCurrentQuota() {
+    return this.currentQuota;
+  }
 }
 exports.QuotaMonitor = QuotaMonitor;
-//# sourceMappingURL=QuotaMonitor.js.map
