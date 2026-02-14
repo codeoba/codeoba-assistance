@@ -56,6 +56,12 @@ const RepoReplicator_1 = require("./managers/RepoReplicator");
 const IntentPredictor_1 = require("./managers/IntentPredictor");
 const SelfHealer_1 = require("./managers/SelfHealer");
 
+// New V4 "Transcendence" Managers
+const SwarmOrchestrator_1 = require("./managers/SwarmOrchestrator");
+const CodeDNA_1 = require("./managers/CodeDNA");
+const ChronosDebugger_1 = require("./managers/ChronosDebugger");
+const Oracle_1 = require("./managers/Oracle");
+
 const StatusBar_1 = require("./ui/StatusBar");
 const Logger_1 = require("./utils/Logger");
 // Mock Database for quick setup
@@ -83,12 +89,16 @@ let voiceCommander;
 let repoReplicator;
 let intentPredictor;
 let selfHealer;
+let swarmOrchestrator;
+let codeDNA;
+let chronosDebugger;
+let oracle;
 let statusBarManager;
 let logger;
 
 async function activate(context) {
     logger = new Logger_1.Logger(context);
-    logger.info('Codeoba Assistance God Mode is active!');
+    logger.info('Codeoba Assistance: TRANSCENDENCE ACHIEVED (v4.0)');
 
     // Initialize managers
     accountManager = new AccountManager_1.AccountManager(context, database);
@@ -111,6 +121,12 @@ async function activate(context) {
     repoReplicator = new RepoReplicator_1.RepoReplicator(context);
     intentPredictor = new IntentPredictor_1.IntentPredictor(context);
     selfHealer = new SelfHealer_1.SelfHealer(context);
+
+    // V4 Initialization
+    swarmOrchestrator = new SwarmOrchestrator_1.SwarmOrchestrator(context);
+    codeDNA = new CodeDNA_1.CodeDNA(context);
+    chronosDebugger = new ChronosDebugger_1.ChronosDebugger(context);
+    oracle = new Oracle_1.Oracle(context);
 
     statusBarManager = new StatusBar_1.StatusBarManager(context);
 
@@ -165,4 +181,9 @@ function registerCommands(context) {
     // V3 Commands
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.replicateRepo', () => repoReplicator.startReplication()));
     context.subscriptions.push(vscode.commands.registerCommand('codeoba.selfHeal', () => selfHealer.healProject()));
+
+    // V4 Commands
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.hiveMind', () => swarmOrchestrator.initiateHiveMind()));
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.extractDNA', () => codeDNA.extractDNA()));
+    context.subscriptions.push(vscode.commands.registerCommand('codeoba.consultOracle', () => oracle.consultTheOracle()));
 }

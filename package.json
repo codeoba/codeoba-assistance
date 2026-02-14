@@ -2,7 +2,7 @@
 	"name": "codeoba-assistance",
 	"displayName": "Codeoba Assistance",
 	"description": "AI Coding Productivity Extension for Google Antigravity - Multi-account management, auto-click, quota monitoring, and advanced workflows",
-	"version": "3.0.0",
+	"version": "4.0.0",
 	"publisher": "MohamedMgaza",
 	"author": {
 		"name": "Mohamed Mgaza",
@@ -162,6 +162,24 @@
 				"title": "Self-Heal Infrastructure",
 				"category": "Codeoba",
 				"icon": "$(heart)"
+			},
+			{
+				"command": "codeoba.hiveMind",
+				"title": "Hive Mind (Swarm Intelligence)",
+				"category": "Codeoba",
+				"icon": "$(organization)"
+			},
+			{
+				"command": "codeoba.extractDNA",
+				"title": "Extract Code DNA",
+				"category": "Codeoba",
+				"icon": "$(git-pull-request)"
+			},
+			{
+				"command": "codeoba.consultOracle",
+				"title": "Consult The Oracle",
+				"category": "Codeoba",
+				"icon": "$(telescope)"
 			}
 		],
 		"keybindings": [
